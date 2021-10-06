@@ -1,0 +1,12 @@
+{% extends 'main.html' %}
+
+{% block title %} Room Page {% endblock %}
+
+{% block content %}
+<div>
+    <p>@{{ room.host }}</p>
+    <h2>{{ room.topic }}</h2>
+    <h3>{{ room.name }}</h3>
+    <p>{{ room.description }}</p>
+</div>
+{% endblock %}
