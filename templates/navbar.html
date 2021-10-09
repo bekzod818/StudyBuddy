@@ -1,4 +1,6 @@
-<nav>
-    <h1><a href="{% url 'home' %}">Logo</a></h1>
-</nav>
+<a href="{% url 'home' %}"><h1>Logo</h1></a>
+
+<form action="{% url 'home' %}" method="get">
+    <input type="text" name="q" placeholder="Search Rooms...">
+</form>
 <hr>
