@@ -3,4 +3,11 @@
 <form action="{% url 'home' %}" method="get">
     <input type="text" name="q" placeholder="Search Rooms...">
 </form>
+
+{% if request.user.is_authenticated %}
+    <span>{{ request.user }}</span>
+    <a href="{% url 'logout' %}">Logout</a>
+{% else %}
+    <a href="{% url 'login' %}">Login</a>
+{% endif %}
 <hr>
