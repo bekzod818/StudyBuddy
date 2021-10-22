@@ -1,2 +1,4 @@
 Django==3.2.7
 Pillow>=8.2.0
+djangorestframework
+django-cors-headers
