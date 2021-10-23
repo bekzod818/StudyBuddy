@@ -1,50 +1,48 @@
 {% extends 'main.html' %}
 
 {% block content %}
-<main class="profile-page layout layout--3">
-    <div class="container">
-      <!-- Topics Start -->
-      {% include 'base/topics_component.html' %}
-      <!-- Topics End -->
+    <main class="profile-page layout layout--3">
+        <div class="container">
+            <!-- Topics Start -->
+            {% include 'base/topics_component.html' %}
+            <!-- Topics End -->
 
-      <!-- Room List Start -->
-      <div class="roomList">
-        <div class="profile">
-          <div class="profile__avatar">
-            <div class="avatar avatar--large active">
-              <img src="https://randomuser.me/api/portraits/men/11.jpg" />
+            <!-- Room List Start -->
+            <div class="roomList">
+                <div class="profile">
+                    <div class="profile__avatar">
+                        <div class="avatar avatar--large active">
+                            <img src="{{ user.avatar.url }}"/>
+                        </div>
+                    </div>
+                    <div class="profile__info">
+                        <h3>{{ user.name }}</h3>
+                        <p>@{{ user.username }}</p>
+                        {% if request.user == user %}
+                            <a href="{% url 'update_user' %}" class="btn btn--main btn--pill">Edit Profile</a>
+                        {% endif %}
+                    </div>
+                    <div class="profile__about">
+                        <h3>About</h3>
+                        <p>
+                            {{ user.bio }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="roomList__header">
+                    <div>
+                        <h2>Study Rooms Hosted by Rakhimov</a>
+                        </h2>
+                    </div>
+                </div>
+                {% include 'base/feed_component.html' %}
             </div>
-          </div>
-          <div class="profile__info">
-            <h3>{{user.username}}</h3>
-            <p>@{{user.username}}</p>
-            {% if request.user == user %}
-            <a href="{% url 'update_user' %}" class="btn btn--main btn--pill">Edit Profile</a>
-            {% endif %}
-          </div>
-          <div class="profile__about">
-            <h3>About</h3>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur illo tenetur
-              facilis sunt nemo debitis quisquam hic atque aut? Ducimus alias placeat optio
-              accusamus repudiandae quis ab ex exercitationem rem?
-            </p>
-          </div>
-        </div>
+            <!-- Room List End -->
 
-        <div class="roomList__header">
-          <div>
-            <h2>Study Rooms Hosted by dennis_ivy</a>
-            </h2>
-          </div>
+            <!-- Activities Start -->
+            {% include 'base/activity_component.html' %}
+            <!-- Activities End -->
         </div>
-        {% include 'base/feed_component.html' %}
-      </div>
-      <!-- Room List End -->
-
-      <!-- Activities Start -->
-      {% include 'base/activity_component.html' %}
-      <!-- Activities End -->
-    </div>
-  </main>
+    </main>
 {% endblock %}

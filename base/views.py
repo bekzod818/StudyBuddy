@@ -1,13 +1,11 @@
 from django.shortcuts import render, redirect
-from .models import Room, Topic, Message
-from .forms import RoomForm, UserForm
+from .models import Room, Topic, Message, User
+from .forms import RoomForm, UserForm, MyUserCreationForm
 from django.db.models import Q
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.contrib.auth.forms import UserCreationForm
 
 
 def loginPage(request):
@@ -16,17 +14,16 @@ def loginPage(request):
     if request.user.is_authenticated:
         return redirect('home')
 
-
     if request.method == 'POST':
-        username = request.POST.get('username').lower()
+        email = request.POST.get('email').lower()
         password = request.POST.get('password')
 
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(email=email)
         except:
             messages.error(request, 'User does not exist')
 
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, email=email, password=password)
 
         if user is not None:
             login(request, user)
@@ -45,10 +42,10 @@ def logoutUser(request):
 
 def registerPage(request):
     page = 'register'
-    form = UserCreationForm()
+    form = MyUserCreationForm()
 
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = MyUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.username = user.username.lower()
@@ -88,9 +85,9 @@ def room(request, pk):
 
     if request.method == 'POST':
         message = Message.objects.create(
-            user = request.user,
-            room = room,
-            body = request.POST.get('body')
+            user=request.user,
+            room=room,
+            body=request.POST.get('body')
         )
         room.participants.add(request.user)
         return redirect('room', pk=room.id)
@@ -123,7 +120,7 @@ def create_room(request):
             description=request.POST.get('description'),
         )
         return redirect('home')
-    
+
     context = {'form': form, 'topics': topics}
     return render(request, 'base/room_form.html', context)
 
@@ -136,7 +133,6 @@ def update_room(request, pk):
     if request.user != room.host:
         return HttpResponse("You are not allowed here")
 
-    
     if request.method == 'POST':
         topic_name = request.POST.get('topic')
         topic, created = Topic.objects.get_or_create(name=topic_name)
@@ -157,7 +153,6 @@ def delete_room(request, pk):
     if request.user != room.host:
         return HttpResponse("You are not allowed here")
 
-
     if request.method == 'POST':
         room.delete()
         return redirect('home')
@@ -173,7 +168,6 @@ def delete_message(request, pk):
     if request.user != message.user:
         return HttpResponse("You are not allowed here")
 
-
     if request.method == 'POST':
         message.delete()
         return redirect('room', pk=message.room.id)
@@ -188,7 +182,7 @@ def updateUser(request):
     form = UserForm(instance=user)
 
     if request.method == 'POST':
-        form = UserForm(request.POST, instance=user)
+        form = UserForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
             return redirect('user_profile', pk=user.id)

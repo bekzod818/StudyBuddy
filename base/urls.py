@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import home, room, create_room, update_room, delete_room, loginPage, logoutUser, registerPage, delete_message, userProfile, updateUser, topicsPage, activityPage
+from .views import home, room, create_room, update_room, delete_room, loginPage, logoutUser, registerPage, \
+    delete_message, userProfile, updateUser, topicsPage, activityPage
 
 urlpatterns = [
     path('login/', loginPage, name="login"),
