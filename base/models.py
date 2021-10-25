@@ -1,5 +1,34 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
+
+
+class AccountManager(BaseUserManager):
+
+    def create_user(self, email, password=None, **extra_fields):
+        if email is None:
+            raise TypeError('User should have a email')
+
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        if password is None:
+            raise TypeError('Password should not be None')
+
+        user = self.create_user(
+            email=email,
+            password=password,
+            **extra_fields,
+        )
+        user.is_superuser = True
+        user.is_staff = True
+        user.is_active = True
+        user.is_verified = True
+        user.save(using=self._db)
+        return user
+
 
 
 class User(AbstractUser):
@@ -7,6 +36,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, null=True)
     bio = models.TextField(null=True)
     avatar = models.ImageField(null=True, default='avatar.svg')
+    objects = AccountManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
